@@ -171,6 +171,14 @@ You would use a command like `SetPauseType [Non-decremental/Decremental]` to cho
 For example, `SetPauseType Non-decremental` would set the game to the non-decremental pause type.
 
 
+**8. Advanced: Multiple Game Modes:**
+
+As a bonus, students can add multiple game modes (like tournament mode, quick match, practice mode, etc.). This will push them to create flexible systems that can adapt to different rule sets and modes.
+
+
+**9. Extend the Game for Multiple Players:**
+
+The traditional TicTacToe game is for two players. Your students are tasked to extend the game to accommodate more than two players. This can be challenging, as they will have to come up with strategies to handle game mechanics like turn management, symbol assignment, and win conditions for multiple players.
 
 =======================================================================
 
@@ -190,6 +198,7 @@ Shortlisted optional features for assignments:
 4. Time-Limited Turns
 5. Pause/Resume Game for non-decremental pause type
 6. Undo a move
+7. 
 
 
 Idea for Design TicTacToe Class:
