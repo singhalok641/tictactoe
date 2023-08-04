@@ -198,10 +198,96 @@ Shortlisted optional features for assignments:
 4. Time-Limited Turns
 5. Pause/Resume Game for non-decremental pause type
 6. Undo a move
-7. 
+7. Implementing Bot Playing Strategies
 
 
 Idea for Design TicTacToe Class:
 1. MCQ questions
 Topics-> Identify design patterns used in this case study
-2. 
+
+
+=======================================================================
+
+**Assignment 1: Implementing Bot Playing Strategies**
+
+In the project developed in class, we have created a `BotPlayer` as one of the player types. In this assignment, your task is to implement the bot's playing strategy using the strategy design pattern.
+
+Your objective is to develop at least two concrete strategies for the bot player:
+
+1. **RandomStrategy:** The bot should make its move randomly. It can place its symbol in any empty slot on the board.
+
+2. **DefensiveStrategy:** The bot should prioritize blocking its opponents from completing a line. If an opponent is one move away from winning, the bot should place its symbol to block the victory. If there is no immediate threat, the bot can choose a random empty slot.
+
+You should define an interface, `BotStrategy`, with a method `makeMove()`. Both the `RandomStrategy` and `DefensiveStrategy` classes should implement this interface and provide concrete implementations for `makeMove()`.
+
+```java
+interface BotStrategy {
+    Move makeMove(GameBoard board);
+}
+```
+
+In the `BotPlayer` class, you should include a reference to the `BotStrategy` and a method to execute the strategy:
+
+```java
+class BotPlayer extends Player {
+    private BotStrategy strategy;
+
+    public BotPlayer(BotStrategy strategy) {
+        this.strategy = strategy;
+    }
+
+    public Move makeMove() {
+        return strategy.makeMove(this.gameBoard);
+    }
+}
+```
+
+The `BotPlayer` should use the strategy set in its constructor to determine its move in each turn.
+
+**Bonus Task:** For an additional challenge, implement an `AggressiveStrategy`. In this strategy, the bot prioritizes completing its own line. If it is one move away from winning, it should place its symbol to achieve victory. If it's not one move away from winning, it should block the opponent from winning (similar to the defensive strategy). If there is no imminent victory or threat, the bot can place its symbol randomly.
+
+To test your implementation, you should be able to switch the strategies for the bot player and observe changes in its behavior. You can test this by creating a game with bot players only and noting how they respond to different situations based on their strategy.
+
+=======================================================================
+
+
+**Assignment 2: Implementing Time-Limited Turns**
+
+One of the enhancements to make our TicTacToe game more dynamic and challenging is to introduce the concept of time-limited turns. In this assignment, your task is to incorporate this feature into the existing game framework.
+
+Your objective is to design and implement a system where each player is allotted a fixed amount of time to make their move. The time limit can be specified at the start of the game or can be changed during the game.
+
+Here's how the feature should work:
+
+1. **Setting Time Limit:** At the start of the game, you should be able to set a time limit for each turn. The command to set the time limit can look something like this: `SetTimeLimit [seconds]`. For example, `SetTimeLimit 60` would mean each player has 60 seconds to make their move.
+
+2. **Countdown:** During each player's turn, a countdown should start. If the player makes their move within the time limit, the game continues as normal. The countdown resets for the next player's turn.
+
+3. **Exceeding Time Limit:** If a player fails to make a move within the time limit, one of two actions should occur. You can choose one of the following options or provide a mechanism to choose the action at the start of the game:
+
+    - **Skip Turn:** The player's turn is skipped, and the game proceeds to the next player.
+    - **Forfeit Game:** The player automatically loses, and the game ends.
+
+4. **Pause/Resume Feature:** Implement a feature to pause the countdown. The command could be `Pause` to pause the game and `Resume` to resume the game. The countdown should resume from where it was paused.
+
+5. **Changing Time Limit:** Provide a mechanism to change the time limit in the middle of the game. The command can be similar to the one used to set the time limit. Changing the time limit should not affect the countdown of the current turn.
+
+Please ensure to handle edge cases and provide informative messages to the players, especially when time is about to run out, or when a turn is skipped or a game is forfeited due to exceeding the time limit.
+
+This feature will require working with real-time elements and multithreading in Java. It's a good chance to familiarize yourself with Java's concurrency tools. As always, make sure your code is clean, readable, and well-documented. Test your implementation thoroughly to ensure it behaves as expected in different scenarios.
+
+Multithreading in Java would be a great way to implement this feature. Here's how you could approach it:
+
+1. **Timer Thread:** When a player's turn starts, you could spawn a new thread (let's call this the "Timer Thread"). This thread would begin a countdown from the set time limit to zero.
+
+2. **Monitoring Player Moves:** The main game thread, in the meantime, would be waiting for the player's input (the move). If the player makes a move before the Timer Thread reaches zero, the move is made on the board, the Timer Thread is interrupted and stopped, and it becomes the next player's turn.
+
+3. **Player Exceeds Time Limit:** If the Timer Thread reaches zero before the player makes a move, it means the player has exceeded their time limit. In this case, the Timer Thread should notify the main game thread (this can be done using a shared variable, callback, or a condition), which can then handle this situation as per the game rules (either skip the player's turn or declare the game forfeit for this player, as the case may be).
+
+4. **Pause/Resume Feature:** If a pause command is received, you can suspend the Timer Thread (do not confuse this with the deprecated `Thread.suspend()` method). Resuming would then simply restart the Timer Thread from where it left off.
+
+Remember, you'll need to take care of thread-safety when shared resources are being accessed or modified by multiple threads. Also, it's important to properly handle the lifecycle of your threads, making sure to interrupt and stop any that are not needed, to avoid potential memory leaks.
+
+Java's concurrency utilities like `ExecutorService`, `Future`, and `CountDownLatch` could be quite useful here. Or for more advanced control, you could consider using the `java.util.concurrent.locks` package.
+
+Please note that multithreading can make a program more complex and harder to debug, so it should be used judiciously. Be sure to thoroughly test all edge cases to ensure your implementation is robust.
