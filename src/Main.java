@@ -24,7 +24,7 @@ public class Main {
 
             // The players can be taken as user input from the console
             players.add(
-                    new Player(1L, "Naman", new Symbol('X'), PlayerType.HUMAN)
+                    new Player(1L, "Alok", new Symbol('X'), PlayerType.HUMAN)
             );
 
             players.add(

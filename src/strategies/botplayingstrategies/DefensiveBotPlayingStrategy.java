@@ -14,6 +14,7 @@ import models.Board;
 import models.Cell;
 import models.CellState;
 import models.Move;
+import models.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,69 +22,75 @@ import java.util.List;
 public class DefensiveBotPlayingStrategy implements BotPlayingStrategy {
 
     private RandomBotPlayingStrategy randomBotPlayingStrategy = new RandomBotPlayingStrategy();
+    private Player botPlayer;
+
+    public DefensiveBotPlayingStrategy(Player botPlayer) {
+        this.botPlayer = botPlayer;
+    }
 
     @Override
     public Move makeMove(Board board) {
-        // check rows
-        for (List<Cell> row : board.getBoard()) {
-//            if (countCellState(row, CellState.X) == board.getSize() - 1
-//                    && countCellState(row, CellState.EMPTY) == 1) {
-//                return new Move(
-//                        findCell(row, CellState.EMPTY),
-//                        null
-//                );
-//            }
+        // check if the human player is about to win, if so, block it
+        Move move = findBlockingMove(board);
+        if (move != null) {
+            return move;
         }
 
-        // check columns
+        // no immediate threat, make a random move
+        return randomBotPlayingStrategy.makeMove(board);
+    }
+
+    private Move findBlockingMove(Board board) {
+        // Check rows
+        for (List<Cell> row : board.getBoard()) {
+            if (isBlockingMoveNeeded(row, board.getSize())) {
+                return new Move(findCell(row, CellState.EMPTY), null);
+            }
+        }
+
+        // Check columns
         for (int j = 0; j < board.getSize(); j++) {
             List<Cell> column = new ArrayList<>();
             for (List<Cell> row : board.getBoard()) {
                 column.add(row.get(j));
             }
-//            if (countCellState(column, CellState.X) == board.getSize() - 1
-//                    && countCellState(column, CellState.EMPTY) == 1) {
-//                return new Move(
-//                        findCell(column, CellState.EMPTY),
-//                        null
-//                );
-//            }
+            if (isBlockingMoveNeeded(column, board.getSize())) {
+                return new Move(findCell(column, CellState.EMPTY), null);
+            }
         }
 
-        // check diagonals
+        // Check diagonals
         List<Cell> diagonal1 = new ArrayList<>();
         List<Cell> diagonal2 = new ArrayList<>();
         for (int i = 0; i < board.getSize(); i++) {
             diagonal1.add(board.getBoard().get(i).get(i));
             diagonal2.add(board.getBoard().get(i).get(board.getSize() - 1 - i));
         }
-//        if (countCellState(diagonal1, CellState.X) == board.getSize() - 1
-//                && countCellState(diagonal1, CellState.EMPTY) == 1) {
-//            return new Move(
-//                    findCell(diagonal1, CellState.EMPTY),
-//                    null
-//            );
-//        }
-//        if (countCellState(diagonal2, CellState.X) == board.getSize() - 1
-//                && countCellState(diagonal2, CellState.EMPTY) == 1) {
-//            return new Move(
-//                    findCell(diagonal2, CellState.EMPTY),
-//                    null
-//            );
-//        }
 
-        // no immediate threat, make a random move
-        return randomBotPlayingStrategy.makeMove(board);
+        if (isBlockingMoveNeeded(diagonal1, board.getSize())) {
+            return new Move(findCell(diagonal1, CellState.EMPTY), null);
+        }
+
+        if (isBlockingMoveNeeded(diagonal2, board.getSize())) {
+            return new Move(findCell(diagonal2, CellState.EMPTY), null);
+        }
+
+        return null;
     }
 
-    private int countCellState(List<Cell> cells, CellState cellState) {
-        int count = 0;
+    private boolean isBlockingMoveNeeded(List<Cell> cells, int boardSize) {
+        int opponentCount = 0;
+        int emptyCount = 0;
+
         for (Cell cell : cells) {
-            if (cell.getCellState().equals(cellState)) {
-                count++;
+            if (cell.getCellState() == CellState.EMPTY) {
+                emptyCount++;
+            } else if (cell.getPlayer().getSymbol() != botPlayer.getSymbol()) { // Check if the cell is not filled by this bot
+                opponentCount++;
             }
         }
-        return count;
+
+        return opponentCount == boardSize - 1 && emptyCount == 1;
     }
 
     private Cell findCell(List<Cell> cells, CellState cellState) {
@@ -95,4 +102,3 @@ public class DefensiveBotPlayingStrategy implements BotPlayingStrategy {
         return null;
     }
 }
-

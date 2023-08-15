@@ -171,6 +171,7 @@ public class Game {
     private void startTurnTimer(Player currentMovePlayer) {
         Runnable onTimeExceeded = () -> {
             System.out.println(currentMovePlayer.getName() + " has exceeded the time limit. Their turn is skipped.");
+
 //            gameState = GameState.WIN;
 //            winner = players.get((nextMovePlayerIndex + 1) % players.size());
         };
@@ -183,14 +184,12 @@ public class Game {
 
         System.out.println("It is " + currentMovePlayer.getName() + "'s turn. Please make your move.");
 
+        // If current player is human, then only start a timer
+        if(turnManager.getTurnTimeLimit() >= 5 && currentMovePlayer.getPlayerType().equals(PlayerType.HUMAN)){
+            startTurnTimer(currentMovePlayer);
+        }
+
         Move move = currentMovePlayer.makeMove(board);
-
-        // If human player, then only start a timer
-//        if(){
-//
-//        }
-
-        startTurnTimer(currentMovePlayer);
 
         System.out.println(currentMovePlayer.getName() + " has made a move at row: " + move.getCell().getRow()
         + " column: " + move.getCell().getCol() + ".");
@@ -208,6 +207,8 @@ public class Game {
         cellToChange.setPlayer(currentMovePlayer);
         Move finalMoveObject = new Move(cellToChange, currentMovePlayer);
         moves.add(finalMoveObject);
+
+        turnManager.stopTurnTimer();
 
         nextMovePlayerIndex += 1;
         nextMovePlayerIndex %= players.size();

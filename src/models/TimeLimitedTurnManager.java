@@ -11,6 +11,11 @@ and for notifying the game when the time is up.
 public class TimeLimitedTurnManager {
     private final int turnTimeLimit;
     private Future<?> future;
+
+    public int getTurnTimeLimit() {
+        return turnTimeLimit;
+    }
+
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     public TimeLimitedTurnManager(int turnTimeLimitInSeconds) {

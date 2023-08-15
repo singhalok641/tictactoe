@@ -5,6 +5,11 @@ import strategies.botplayingstrategies.BotPlayingStrategyFactory;
 
 public class Bot extends Player {
     private BotDifficultyLevel botDifficultyLevel;
+
+    public BotPlayingStrategy getBotPlayingStrategy() {
+        return botPlayingStrategy;
+    }
+
     private BotPlayingStrategy botPlayingStrategy;
 
     public Bot(Long id, String name, Symbol symbol,
@@ -12,7 +17,7 @@ public class Bot extends Player {
         super(id, name, symbol, PlayerType.BOT);
         this.botDifficultyLevel = botDifficultyLevel;
         this.botPlayingStrategy = BotPlayingStrategyFactory
-                .getBotPlayingStrategyForDifficultyLevel(botDifficultyLevel);
+                .getBotPlayingStrategyForDifficultyLevel(botDifficultyLevel, this);
     }
 
     public BotDifficultyLevel getBotDifficultyLevel() {
