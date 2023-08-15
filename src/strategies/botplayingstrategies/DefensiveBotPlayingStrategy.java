@@ -26,13 +26,13 @@ public class DefensiveBotPlayingStrategy implements BotPlayingStrategy {
     public Move makeMove(Board board) {
         // check rows
         for (List<Cell> row : board.getBoard()) {
-            if (countCellState(row, CellState.X) == board.getSize() - 1
-                    && countCellState(row, CellState.EMPTY) == 1) {
-                return new Move(
-                        findCell(row, CellState.EMPTY),
-                        null
-                );
-            }
+//            if (countCellState(row, CellState.X) == board.getSize() - 1
+//                    && countCellState(row, CellState.EMPTY) == 1) {
+//                return new Move(
+//                        findCell(row, CellState.EMPTY),
+//                        null
+//                );
+//            }
         }
 
         // check columns
@@ -41,13 +41,13 @@ public class DefensiveBotPlayingStrategy implements BotPlayingStrategy {
             for (List<Cell> row : board.getBoard()) {
                 column.add(row.get(j));
             }
-            if (countCellState(column, CellState.X) == board.getSize() - 1
-                    && countCellState(column, CellState.EMPTY) == 1) {
-                return new Move(
-                        findCell(column, CellState.EMPTY),
-                        null
-                );
-            }
+//            if (countCellState(column, CellState.X) == board.getSize() - 1
+//                    && countCellState(column, CellState.EMPTY) == 1) {
+//                return new Move(
+//                        findCell(column, CellState.EMPTY),
+//                        null
+//                );
+//            }
         }
 
         // check diagonals
@@ -57,20 +57,20 @@ public class DefensiveBotPlayingStrategy implements BotPlayingStrategy {
             diagonal1.add(board.getBoard().get(i).get(i));
             diagonal2.add(board.getBoard().get(i).get(board.getSize() - 1 - i));
         }
-        if (countCellState(diagonal1, CellState.X) == board.getSize() - 1
-                && countCellState(diagonal1, CellState.EMPTY) == 1) {
-            return new Move(
-                    findCell(diagonal1, CellState.EMPTY),
-                    null
-            );
-        }
-        if (countCellState(diagonal2, CellState.X) == board.getSize() - 1
-                && countCellState(diagonal2, CellState.EMPTY) == 1) {
-            return new Move(
-                    findCell(diagonal2, CellState.EMPTY),
-                    null
-            );
-        }
+//        if (countCellState(diagonal1, CellState.X) == board.getSize() - 1
+//                && countCellState(diagonal1, CellState.EMPTY) == 1) {
+//            return new Move(
+//                    findCell(diagonal1, CellState.EMPTY),
+//                    null
+//            );
+//        }
+//        if (countCellState(diagonal2, CellState.X) == board.getSize() - 1
+//                && countCellState(diagonal2, CellState.EMPTY) == 1) {
+//            return new Move(
+//                    findCell(diagonal2, CellState.EMPTY),
+//                    null
+//            );
+//        }
 
         // no immediate threat, make a random move
         return randomBotPlayingStrategy.makeMove(board);

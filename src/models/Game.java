@@ -18,24 +18,28 @@ public class Game {
     private GameState gameState;
     private int nextMovePlayerIndex;
     private List<WinningStrategy> winningStrategies;
+    private TimeLimitedTurnManager turnManager;
 
     public static Builder getBuilder() {
         return new Builder();
     }
 
-    private Game(int dimension, List<Player> players, List<WinningStrategy> winningStrategies) {
+    private Game(int dimension, List<Player> players, List<WinningStrategy> winningStrategies,
+                 int turnTimeLimitInSeconds) {
         this.nextMovePlayerIndex = 0;
         this.gameState = GameState.IN_PROGRESS;
         this.moves = new ArrayList<>();
         this.players = players;
         this.winningStrategies = winningStrategies;
         this.board = new Board(dimension);
+        this.turnManager = new TimeLimitedTurnManager(turnTimeLimitInSeconds);
     }
 
     public static class Builder {
         private List<Player> players;
         private List<WinningStrategy> winningStrategies;
         private int dimension;
+        private int turnTimeLimitInSeconds;
 
         private Builder() {
             this.players = new ArrayList<>();
@@ -50,6 +54,11 @@ public class Game {
 
         public Builder setPlayers(List<Player> players) {
             this.players = players;
+            return this;
+        }
+
+        public Builder setTurnTimeLimitInSeconds(int turnTimeLimitInSeconds) {
+            this.turnTimeLimitInSeconds = turnTimeLimitInSeconds;
             return this;
         }
 
@@ -119,7 +128,8 @@ public class Game {
             return new Game(
                     dimension,
                     players,
-                    winningStrategies
+                    winningStrategies,
+                    turnTimeLimitInSeconds
             );
         }
     }
@@ -158,12 +168,29 @@ public class Game {
         return false;
     }
 
+    private void startTurnTimer(Player currentMovePlayer) {
+        Runnable onTimeExceeded = () -> {
+            System.out.println(currentMovePlayer.getName() + " has exceeded the time limit. Their turn is skipped.");
+//            gameState = GameState.WIN;
+//            winner = players.get((nextMovePlayerIndex + 1) % players.size());
+        };
+
+        turnManager.startTurnTimer(onTimeExceeded);
+    }
+
     public void makeMove() {
         Player currentMovePlayer = players.get(nextMovePlayerIndex);
 
         System.out.println("It is " + currentMovePlayer.getName() + "'s turn. Please make your move.");
 
         Move move = currentMovePlayer.makeMove(board);
+
+        // If human player, then only start a timer
+//        if(){
+//
+//        }
+
+        startTurnTimer(currentMovePlayer);
 
         System.out.println(currentMovePlayer.getName() + " has made a move at row: " + move.getCell().getRow()
         + " column: " + move.getCell().getCol() + ".");

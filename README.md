@@ -291,3 +291,17 @@ Remember, you'll need to take care of thread-safety when shared resources are be
 Java's concurrency utilities like `ExecutorService`, `Future`, and `CountDownLatch` could be quite useful here. Or for more advanced control, you could consider using the `java.util.concurrent.locks` package.
 
 Please note that multithreading can make a program more complex and harder to debug, so it should be used judiciously. Be sure to thoroughly test all edge cases to ensure your implementation is robust.
+
+
+Code ttt 1
+// Implement check winner as discussed in class
+// Undo a move
+// Random Strategy for Bot Player
+
+Code ttt 2
+// Implement Time Limited Turns
+// Implement Aggressive Strategy for Bot Player
+// Implement Defensive Strategy for Bot Player
+// Implement Pause/Resume Feature
+
+

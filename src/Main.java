@@ -21,6 +21,8 @@ public class Main {
             int dimensionOfGame = 3;
 
             List<Player> players = new ArrayList<>();
+
+            // The players can be taken as user input from the console
             players.add(
                     new Player(1L, "Naman", new Symbol('X'), PlayerType.HUMAN)
             );
@@ -35,11 +37,34 @@ public class Main {
                     new DiagonalWinningStrategy()
             );
 
-            Game game = gameController.startGame(
-                    dimensionOfGame,
-                    players,
-                    winningStrategies
-            );
+            // Check for time limited turns
+            System.out.println("Do we want to have time limited turns? (y/n)");
+            String timeLimitedTurnsAnswer = scanner.next();
+            Integer turnTimeLimitInSeconds = null;
+
+            if(timeLimitedTurnsAnswer.equalsIgnoreCase("y")){
+                // If yes, then ask for the time limit
+                System.out.println("Enter the time limit for each turn in seconds");
+                turnTimeLimitInSeconds = scanner.nextInt();
+            }
+
+            Game game = null;
+
+            if(turnTimeLimitInSeconds != null){
+                game = gameController.startGame(
+                        dimensionOfGame,
+                        players,
+                        winningStrategies,
+                        turnTimeLimitInSeconds
+                );
+            }
+            else{
+                game = gameController.startGame(
+                        dimensionOfGame,
+                        players,
+                        winningStrategies
+                );
+            }
 
             while(gameController.checkState(game).equals(GameState.IN_PROGRESS)) {
                 // 1. printBoard
@@ -71,7 +96,5 @@ public class Main {
         } catch (Exception e) {
             throw e;
         }
-
-
     }
 }

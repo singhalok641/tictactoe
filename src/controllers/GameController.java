@@ -12,15 +12,24 @@ import java.util.List;
 
 public class GameController {
 
+    //startGame with turnTimeLimitInSeconds
     public Game startGame(int dimensionOfBoard,
                    List<Player> players,
-                   List<WinningStrategy> winningStrategies) throws DuplicateSymbolException, PlayersCountDimensionMismatchException, MoreThanOneBotException {
-//        Game.Builder.setPlayers(....)
-//        .setWinningStrategies(...)
-//        .build();
-//
-//        Game.Builder.addPlayer(..).addPlayer(..)
-//        .addWinningStrategy().build();
+                   List<WinningStrategy> winningStrategies,
+                          int turnTimeLimitInSeconds) throws DuplicateSymbolException, PlayersCountDimensionMismatchException, MoreThanOneBotException {
+
+        return Game.getBuilder()
+                .setPlayers(players)
+                .setWinningStrategies(winningStrategies)
+                .setDimension(dimensionOfBoard)
+                .setTurnTimeLimitInSeconds(turnTimeLimitInSeconds)
+                .build();
+    }
+
+    // startGame without turnTimeLimitInSeconds
+    public Game startGame(int dimensionOfBoard,
+                          List<Player> players,
+                          List<WinningStrategy> winningStrategies) throws DuplicateSymbolException, PlayersCountDimensionMismatchException, MoreThanOneBotException {
 
         return Game.getBuilder()
                 .setPlayers(players)
