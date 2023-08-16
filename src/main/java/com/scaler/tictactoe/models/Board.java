@@ -18,7 +18,6 @@ public class Board {
                 board.get(i).add(new Cell(i, j));
             }
         }
-
     }
 
     public void printBoard() {
